@@ -1,0 +1,30 @@
+[package]
+name = "querystring_tiny"
+version = "0.1.0"
+edition = "2021"
+authors = ["KizzyCode Software Labs./Keziah Biermann <development@kizzycode.de>"]
+keywords = []
+categories = []
+description = "A super tiny library to parse a HTTP querystring"
+license = "BSD-2-Clause OR MIT"
+repository = "https://github.com/KizzyCode/querystring_tiny-rust"
+readme = "README.md"
+
+
+[badges]
+appveyor = { repository = "KizzyCode/querystring_tiny-rust" }
+
+
+[features]
+default = []
+
+
+[dependencies]
+ebacktrace = "0.5"
+
+
+[profile.release]
+overflow-checks = true
+
+[profile.bench]
+overflow-checks = true
