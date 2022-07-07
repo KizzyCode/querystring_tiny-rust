@@ -1,31 +1,35 @@
-use crate::error::Result;
-use std::ops::Deref;
+//! Implements percent-coding
 
+use crate::error::Error;
+use std::ops::Deref;
 
 /// Some percent-encoded data
 #[derive(Debug, Default)]
 pub struct PercentCoded {
     /// The decoded data
-    data: Vec<u8>
+    data: Vec<u8>,
 }
 impl PercentCoded {
     /// The allowed chars
     const ALLOWED_CHARS: &'static [u8] = b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~";
 
     /// Creates a new percent coder
-    pub fn new<T>(data: T) -> Self where T: Into<Vec<u8>> {
+    pub fn new<T>(data: T) -> Self
+    where
+        T: Into<Vec<u8>>,
+    {
         Self { data: data.into() }
     }
     /// Percent-decodes some data
-    pub fn decode(source: &[u8]) -> Result<Self> {
+    pub fn decode(source: &[u8]) -> Result<Self, Error> {
         // Decode all hex literals
         let (mut source, mut decoded) = (source.iter().copied(), Vec::new());
         while let Some(mut byte) = source.next() {
             // Decode percent literal if necessary
             if byte == b'%' {
                 // Get the encoded bytes
-                let high = source.next().ok_or(einval!("Truncated percent-encoded literal"))?;
-                let low = source.next().ok_or(einval!("Truncated percent-encoded literal"))?;
+                let high = source.next().ok_or(Error::PercentEncoding)?;
+                let low = source.next().ok_or(Error::PercentEncoding)?;
                 byte = Self::decode_byte(high, low)?;
             }
 
@@ -35,16 +39,16 @@ impl PercentCoded {
         Ok(Self { data: decoded })
     }
     /// Encodes a nibble into a hex char
-    fn decode_nibble(nibble: u8) -> Result<u8> {
+    fn decode_nibble(nibble: u8) -> Result<u8, Error> {
         match nibble {
             b'0'..=b'9' => Ok(nibble - b'0'),
             b'a'..=b'f' => Ok((nibble - b'a') + 0xA),
             b'A'..=b'F' => Ok((nibble - b'A') + 0xA),
-            nibble => Err(einval!("Invalid hex value: {nibble}"))
+            _ => Err(Error::PercentEncoding),
         }
     }
     /// Encodes a byte
-    fn decode_byte(high: u8, low: u8) -> Result<u8> {
+    fn decode_byte(high: u8, low: u8) -> Result<u8, Error> {
         Ok(Self::decode_nibble(high)? << 4 | Self::decode_nibble(low)?)
     }
 
@@ -71,7 +75,7 @@ impl PercentCoded {
         match nibble {
             0x0..=0x9 => nibble + b'0',
             0xA..=0xF => (nibble - 0xA) + b'A',
-            nibble => unreachable!("Invalid nibble value: {nibble}")
+            nibble => unreachable!("Invalid nibble value: {nibble}"),
         }
     }
     /// Encodes a byte
@@ -82,7 +86,7 @@ impl PercentCoded {
 }
 impl Deref for PercentCoded {
     type Target = [u8];
-    
+
     fn deref(&self) -> &Self::Target {
         &self.data
     }

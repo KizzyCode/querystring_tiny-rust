@@ -1,6 +1,7 @@
-use crate::error::Result;
-use std::{ collections::BTreeMap, iter::FromIterator, ops::Deref };
+//! Implements a trivial query string decoder
 
+use crate::error::Error;
+use std::{collections::BTreeMap, iter::FromIterator, ops::Deref};
 
 /// A query string
 ///
@@ -19,7 +20,7 @@ use std::{ collections::BTreeMap, iter::FromIterator, ops::Deref };
 #[derive(Debug, Clone, Default)]
 pub struct QueryString {
     /// The key-value fields of the query string
-    fields: BTreeMap<Vec<u8>, Vec<u8>>
+    fields: BTreeMap<Vec<u8>, Vec<u8>>,
 }
 impl QueryString {
     /// Creates a new header field map
@@ -27,7 +28,7 @@ impl QueryString {
         Self { fields: BTreeMap::new() }
     }
     /// Decodes a query string
-    pub fn decode(source: &[u8]) -> Result<Self> {
+    pub fn decode(source: &[u8]) -> Result<Self, Error> {
         // Parse the query components
         let (mut source, mut fields) = (source.iter().copied(), BTreeMap::new());
         while source.len() > 0 {
@@ -45,11 +46,18 @@ impl QueryString {
     }
 
     /// Gets the value for the field with the given name
-    pub fn get<T>(&self, name: T) -> Option<&[u8]> where T: AsRef<[u8]> {
+    pub fn get<T>(&self, name: T) -> Option<&[u8]>
+    where
+        T: AsRef<[u8]>,
+    {
         self.fields.get(name.as_ref()).map(|s| s.as_ref())
     }
     /// Sets the value for a fiels with the given name
-    pub fn set<A, B>(&mut self, name: A, value: B) where A: Into<Vec<u8>>, B: Into<Vec<u8>> {
+    pub fn set<A, B>(&mut self, name: A, value: B)
+    where
+        A: Into<Vec<u8>>,
+        B: Into<Vec<u8>>,
+    {
         self.fields.insert(name.into(), value.into());
     }
 
@@ -75,16 +83,18 @@ impl QueryString {
 }
 impl Deref for QueryString {
     type Target = BTreeMap<Vec<u8>, Vec<u8>>;
-    
+
     fn deref(&self) -> &Self::Target {
         &self.fields
     }
 }
-impl<K, V> FromIterator<(K, V)> for QueryString where K: Into<Vec<u8>>, V: Into<Vec<u8>> {
+impl<K, V> FromIterator<(K, V)> for QueryString
+where
+    K: Into<Vec<u8>>,
+    V: Into<Vec<u8>>,
+{
     fn from_iter<T: IntoIterator<Item = (K, V)>>(pairs: T) -> Self {
-        let fields = pairs.into_iter()
-            .map(|(k, v)| (k.into(), v.into()))
-            .collect();
+        let fields = pairs.into_iter().map(|(k, v)| (k.into(), v.into())).collect();
         Self { fields }
     }
 }
