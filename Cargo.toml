@@ -20,7 +20,6 @@ default = []
 
 
 [dependencies]
-thiserror = "1.0"
 
 
 [profile.release]

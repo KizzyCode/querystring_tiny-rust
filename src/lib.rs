@@ -1,9 +1,6 @@
 #![doc = include_str!("../README.md")]
 
 #[macro_use]
-extern crate thiserror;
-
-#[macro_use]
 pub mod error;
 mod percentcoding;
 mod querystring;

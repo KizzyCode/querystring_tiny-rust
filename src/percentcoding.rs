@@ -28,8 +28,8 @@ impl PercentCoded {
             // Decode percent literal if necessary
             if byte == b'%' {
                 // Get the encoded bytes
-                let high = source.next().ok_or(Error::PercentEncoding)?;
-                let low = source.next().ok_or(Error::PercentEncoding)?;
+                let high = source.next().ok_or(error!("Truncated percent literal"))?;
+                let low = source.next().ok_or(error!("Truncated percent literal"))?;
                 byte = Self::decode_byte(high, low)?;
             }
 
@@ -44,7 +44,7 @@ impl PercentCoded {
             b'0'..=b'9' => Ok(nibble - b'0'),
             b'a'..=b'f' => Ok((nibble - b'a') + 0xA),
             b'A'..=b'F' => Ok((nibble - b'A') + 0xA),
-            _ => Err(Error::PercentEncoding),
+            nibble => Err(error!("Invalid character in percent literal: 0x{nibble:02x}")),
         }
     }
     /// Encodes a byte
