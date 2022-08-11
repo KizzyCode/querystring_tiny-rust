@@ -1,7 +1,7 @@
 //! Implements percent-coding
 
 use crate::error::Error;
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 
 /// Some percent-encoded data
 #[derive(Debug, Default)]
@@ -89,5 +89,20 @@ impl Deref for PercentCoded {
 
     fn deref(&self) -> &Self::Target {
         &self.data
+    }
+}
+impl DerefMut for PercentCoded {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.data
+    }
+}
+impl AsRef<[u8]> for PercentCoded {
+    fn as_ref(&self) -> &[u8] {
+        &self.data
+    }
+}
+impl AsMut<[u8]> for PercentCoded {
+    fn as_mut(&mut self) -> &mut [u8] {
+        &mut self.data
     }
 }
