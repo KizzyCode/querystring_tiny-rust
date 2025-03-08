@@ -1,9 +1,7 @@
 //! Implements the crate's error type
 
-use std::{
-    error,
-    fmt::{self, Display, Formatter},
-};
+use std::error;
+use std::fmt::{self, Display, Formatter};
 
 /// Creates a new error
 #[macro_export]

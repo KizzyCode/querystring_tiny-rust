@@ -49,7 +49,7 @@ impl PercentCoded {
     }
     /// Encodes a byte
     fn decode_byte(high: u8, low: u8) -> Result<u8, Error> {
-        Ok(Self::decode_nibble(high)? << 4 | Self::decode_nibble(low)?)
+        Ok((Self::decode_nibble(high)? << 4) | Self::decode_nibble(low)?)
     }
 
     /// Percent-encodes some data

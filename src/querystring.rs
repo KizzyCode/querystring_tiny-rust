@@ -1,7 +1,9 @@
 //! Implements a trivial query string decoder
 
 use crate::error::Error;
-use std::{collections::BTreeMap, iter::FromIterator, ops::Deref};
+use std::collections::BTreeMap;
+use std::iter::FromIterator;
+use std::ops::Deref;
 
 /// A query string
 ///

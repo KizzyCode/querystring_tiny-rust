@@ -1,5 +1,6 @@
 use querystring_tiny::QueryString;
-use std::{collections::BTreeMap, ops::Deref};
+use std::collections::BTreeMap;
+use std::ops::Deref;
 
 /// Creates a new map
 pub fn map<I, K, V>(pairs: I) -> BTreeMap<Vec<u8>, Vec<u8>>

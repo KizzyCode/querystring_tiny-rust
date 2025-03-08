@@ -4,7 +4,7 @@
 [![docs.rs](https://docs.rs/querystring_tiny/badge.svg)](https://docs.rs/querystring_tiny)
 [![crates.io](https://img.shields.io/crates/v/querystring_tiny.svg)](https://crates.io/crates/querystring_tiny)
 [![Download numbers](https://img.shields.io/crates/d/querystring_tiny.svg)](https://crates.io/crates/querystring_tiny)
-[![dependency status](https://deps.rs/crate/querystring_tiny/0.2.1/status.svg)](https://deps.rs/crate/querystring_tiny/0.2.1)
+[![dependency status](https://deps.rs/crate/querystring_tiny/latest/status.svg)](https://deps.rs/crate/querystring_tiny)
 
 
 # `querystring_tiny`
